@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta name="google-signin-client_id" content="183588713013-bouighqfskej7vkt0df73905np0agjed.apps.googleusercontent.com">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href = "{{ url_for('static', filename='styles.css') }}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+<script>
+  function start() {
+    gapi.load('auth2', function() {
+      auth2 = gapi.auth2.init({
+        client_id: '183588713013-bouighqfskej7vkt0df73905np0agjed.apps.googleusercontent.com'
+      });
+    });
+  }
+</script>
+
+</head>
+<body>
+<div class="header">
+ <button class="btn"><a class="fa fa-home" href="/catalog"></a></button>
+<h2>THE CATALOG APP</h2>
+</div>
+<div class="sidenav">
+<h>CATEGORIES</h>
+{% for i in categories %}
+<a href="/catalog/{{i.id}}/ItemsList"><ul><li>{{i.name}}</li></ul></a>
+{% endfor %}
+</div>
+<div class="main">
+<iframe style="float:right",
+        allow="microphone;"
+        width="400"
+        height="430"
+        src="https://console.dialogflow.com/api-client/demo/embedded/4fa68dc7-3902-4d34-a95d-bcf13f07c2cd">
+</iframe>
+ {%if 'username' in session %}
+ <a id = "AddItem" style="font-weight: bold;text-align: left;padding: 15px 15px 15px 15px;" href="/catalog/new"> <u>Add Items</u></a>
+ {% endif %}
+ <h style="padding: 15px 15px 15px 15px"><i>Item List</i></h>
+ {% for i in items %}
+ <a href="/catalog/{{i.id}}/ItemDetails"><ul style="list-style-type:square;"><li>{{i.name}}</li></ul></a>
+ {% endfor %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class="flash">
+      {% for message in messages %}
+      <h2 style="color:red; font-size: 18px;">{{message}}</h2>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+ </div>
+{%if 'username' in session %}
+<div id = "signoutButton"><a class="button" href="{{url_for('gdisconnect')}}">Logout </a>
+</div>
+{% else %}
+<div id="signinButton"><a class="button" href="javascript:void(0)">Sign In</a></div>
+{% endif %}
+ <script>
+$('#signinButton').click(function() {
+    function signInCallback(authResult){
+      if (authResult['code']){
+        $('#signinButton').attr('style', 'display: none');
+        $.ajax({
+          type: 'POST',
+          url: '/gconnect?state={{STATE}}',
+          headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+          },
+          contentType: 'application/octet-stream; charset=utf-8',
+          success:function(result){
+            $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+                window.location.href = "/";                 
+          },
+          processData:false,
+          data:authResult['code']
+        });
+      } else{
+        // handle error
+        console.log('There was an error: ' + authResult['error']);
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+      }
+    }
+    auth2.grantOfflineAccess().then(signInCallback);
+  });
+</script>
+</body>
+
+</html>
