@@ -1,4 +1,10 @@
-# TheCatalogApp
+# Tesco Chatbot web app
+
+You can access the chatbot from the web app by adding the iframes provided by dialog flow integration.
+
+![Screeshot](https://github.com/Shreya957/ChatBotTesco/blob/master/image/Chatbot.PNG)
+
+# 
 
 This application provides the details of items belonging to a certail sports categories,
 with a third party(Google) user authentication system. Where the user will have the capability to
