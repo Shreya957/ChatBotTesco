@@ -1,0 +1,10 @@
+# Function dependencies, for example:
+# package>=version
+
+Flask==0.12.2
+requests==2.18.4
+gunicorn==19.7.1
+
+psycopg2==2.7.7
+PyMySQL==0.9.3
+
